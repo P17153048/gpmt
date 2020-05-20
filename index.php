@@ -1,6 +1,10 @@
 <?php
 session_start ();
+require_once 'modules/projects.php';
+
 $user = $_SESSION["user"];
+$projects = get_projects ();
+
 ?>
 
 <!doctype html>
@@ -123,10 +127,15 @@ $user = $_SESSION["user"];
             <h4>Projects <button type="button" data-toggle="modal" data-target=".bd-example-modal-xl" class="btn btn-primary btn-sm float-right">Create new project</button></h4>
 
             <div class="list-group" id="project-list">
-                <a href="project.html" class="list-group-item list-group-item-action">Example project title <span class="badge badge-info float-right" title="Unifinished tasks">4</span></a>
-                <a href="project.html" class="list-group-item list-group-item-action">Example project title #2 <span class="badge badge-info float-right" title="Unifinished tasks">2</span></a>
-                <a href="project.html" class="list-group-item list-group-item-action">Example project title #3</a>
-                <a href="project.html" class="list-group-item list-group-item-action">Example project title #4 <span class="badge badge-info float-right" title="Unifinished tasks">1</span></a>
+                <?php
+                    foreach ($projects as $project){
+                        echo '<a href="project.php?id=' . $project['id'] . '" class="list-group-item list-group-item-action">' . $project['title'] . '<span class="badge badge-info float-right" title="Unifinished tasks">' . $project['unfinished_tasks'] . '</span></a>';
+                    }
+                ?>
+<!--                <a href="project.html" class="list-group-item list-group-item-action">Example project title <span class="badge badge-info float-right" title="Unifinished tasks">4</span></a>-->
+<!--                <a href="project.html" class="list-group-item list-group-item-action">Example project title #2 <span class="badge badge-info float-right" title="Unifinished tasks">2</span></a>-->
+<!--                <a href="project.html" class="list-group-item list-group-item-action">Example project title #3</a>-->
+<!--                <a href="project.html" class="list-group-item list-group-item-action">Example project title #4 <span class="badge badge-info float-right" title="Unifinished tasks">1</span></a>-->
             </div>
         </div>
     </div>
