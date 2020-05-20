@@ -1,3 +1,8 @@
+<?php
+session_start ();
+$user = $_SESSION["user"];
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -40,12 +45,12 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Username</a>
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $user["email"] ?>></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="settings.html">Settings</a>
                         <a class="dropdown-item" href="messages.html">Messages <span class="badge badge-danger">4</span></a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>
                 </li>
             </ul>
