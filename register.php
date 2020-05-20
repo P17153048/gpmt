@@ -1,31 +1,34 @@
 <?php
-require_once 'data/database.php';
 require_once 'modules/user.php';
 
-$database = new DB();
 $error = null;
-$valid = null;
+$error_type = null;
 
-if (isset( $_POST[ "inputEmail" ] )) {
-    $username = $_POST[ "inputEmail" ];
-    $password = $_POST[ "inputPassword" ];
+if (isset( $_POST[ 'inputFName' ] )) {
+    $f_name = $_POST[ 'inputFName' ];
+    $l_name = $_POST[ 'inputLName' ];
+    $username = $_POST[ 'inputUsername' ];
+    $password = $_POST[ 'inputPassword' ];
+    $confirm_password = $_POST[ 'inputPassword2' ];
+    $email = $_POST[ 'inputEmail' ];
+    $permission = 0;
 
-    $valid = login ( $username, $password );
-    switch ($valid) {
-        case 1:
-            $error = "Successfully logged in! Please wait while we initialize the application for you...";
-            header('refresh:4; url=index.php');
-            break;
-        case 0:
-            $error = "User not found";
-            break;
-        case 2:
-            $error = "Incorrect credentials";
-            break;
+    if ($password != $confirm_password) {
+        $error = 'Passwords do not match. Please rectify and try again';
+        $error_type = 'error';
+    }else{
+        $created = create ( $username, $email, $f_name, $l_name, $password, $permission );
+        if ($created) {
+            $error = 'Registration success! You can <a href="login.php">login</a> now';
+            $error_type = 'success';
+        } else {
+            $error = 'Email address exists. Please register with a different email address';
+            $error_type = 'error';
+        }
     }
+
+
 }
-
-
 ?>
 
 <!doctype html>
@@ -40,7 +43,7 @@ if (isset( $_POST[ "inputEmail" ] )) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Login</title>
+    <title>Register</title>
     <style>
         body {
             display: -ms-flexbox;
@@ -82,34 +85,33 @@ if (isset( $_POST[ "inputEmail" ] )) {
         <div class="col-lg-4 col-md-6 col-11">
             <?php
             if ($error != null) {
-                if ($valid == 0) {
-                    echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
-                }
-                if ($valid == 1) {
-                    echo '<div class="alert alert-success" role="alert">' . $error . '</div>';
-                }
-                if ($valid == 2) {
-                    echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
-                }
+                echo '<div class="alert alert-' . ( $error_type == 'error' ? 'danger' : 'success' ) . '" role="alert">' . $error . '</div>';
             }
             ?>
-            <form class="form-signin text-center" name="login" action="login.php" method="POST">
-                <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-                <label for="inputEmail" class="sr-only">Email address</label>
-                <input type="email" id="inputEmail" name="inputEmail" class="form-control mb-3"
-                       placeholder="Email address" required=""
+            <form class="form-signin text-center" name="register" method="POST" action="register.php">
+
+                <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+                <label for="inputFName" class="sr-only">First Name</label>
+                <input type="text" id="inputFName" name="inputFName" class="form-control mb-3" placeholder="First Name" required=""
                        autofocus="">
+                <label for="inputLName" class="sr-only">Last Name</label>
+                <input type="text" id="inputLName" name="inputLName" class="form-control mb-3" placeholder="Last Name" required="">
+                <label for="inputUsername" class="sr-only">Username</label>
+                <input type="text" id="inputUsername" name="inputUsername" class="form-control mb-3" placeholder="Username" required="">
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <input type="email" id="inputEmail" name="inputEmail" class="form-control mb-3" placeholder="Email address" required="">
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" name="inputPassword" class="form-control mb-3"
-                       placeholder="Password" required="">
+                <input type="password" id="inputPassword" name="inputPassword" class="form-control mb-3" placeholder="Password" required="">
+                <label for="inputPassword2" class="sr-only">Repeat Password</label>
+                <input type="password" id="inputPassword2" name="inputPassword2" class="form-control mb-3" placeholder="Confirm Password"
+                       required="">
                 <div class="checkbox mb-3">
                     <label>
                         <input type="checkbox" value="remember-me"> Remember me
                     </label>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
             </form>
-
         </div>
     </div>
 </div>
@@ -129,3 +131,4 @@ if (isset( $_POST[ "inputEmail" ] )) {
 </body>
 
 </html>
+
