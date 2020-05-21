@@ -9,5 +9,16 @@ function get_projects()
                                                             FROM tasks
                                                             WHERE status = 0
                                                             GROUP BY project_id) t ON t.project_id = p.id;
-" );
+                                    " );
+}
+
+function create_project($title, $description, $date_created, $created_by, $status){
+    $database = new DB();
+    return $database->insert ( 'projects', array(
+        'title' => $title,
+        'description' => $description,
+        'date_created' => $date_created,
+        'created_by' => $created_by,
+        'status' => $status
+    ) );
 }

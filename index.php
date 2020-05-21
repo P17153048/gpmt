@@ -4,8 +4,28 @@ require_once 'modules/projects.php';
 require_once 'modules/tasks.php';
 
 $user = $_SESSION[ "user" ];
+
+
+if(isset($_POST['title'])){
+    $project_title = $_POST['title'];
+    $project_description = $_POST['description'];
+    $date_created = strtotime($_POST['deadline']);
+    $created_by = $user['id'];
+    $status = 0;
+    $project_created = create_project ($project_title, $project_description, $date_created, $created_by, $status);
+    if($project_created){
+        $error = 'Creating project. Please wait..';
+        $error_type = 'success';
+    }else{
+        $error = 'Unable to create project. Please try again';
+        $error_type = 'danger';
+    }
+}
+
 $projects = get_projects ();
 $tasks = get_tasks ( $user[ 'id' ] );
+$error = null;
+$error_type = null;
 
 function get_badge($task)
 {
@@ -17,6 +37,7 @@ function get_badge($task)
         return 'success';
     }
 }
+
 
 ?>
 
@@ -109,7 +130,7 @@ function get_badge($task)
             <div class="list-group" id="project-list">
                 <?php
                 foreach ($projects as $project) {
-                    echo '<a href="project.php?id=' . $project[ 'id' ] . '" class="list-group-item list-group-item-action">' . $project[ 'title' ] . '<span class="badge badge-info float-right" title="Unifinished tasks">' . $project[ 'unfinished_tasks' ] . '</span></a>';
+                    echo '<a href="project.php?id=' . $project[ 'id' ] . '" class="list-group-item list-group-item-action">' . $project[ 'title' ] . ($project['unfinished_tasks'] > 0 ? '<span class="badge badge-info float-right" title="Unifinished tasks">' . $project[ 'unfinished_tasks' ] : '') . '</span></a>';
                 }
                 ?>
             </div>
@@ -120,7 +141,7 @@ function get_badge($task)
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
-        <form class="modal-content">
+        <form class="modal-content" name="create_project" action="index.php" method="POST">
             <div class="modal-header">
                 <h5 class="modal-title">New project</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -128,6 +149,11 @@ function get_badge($task)
                 </button>
             </div>
             <div class="modal-body">
+                <?php
+                if ($error != null) {
+                       echo '<div class="alert alert-' . $error_type . '" role="alert">' . $error . '</div>';
+                }
+                ?>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Project title</label>
                     <input type="text" name="title" id="project-title" class="form-control" id="formGroupExampleInput"
@@ -135,18 +161,17 @@ function get_badge($task)
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Project description</label>
-                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"
-                              required></textarea>
+                    <textarea class="form-control" name="description" id="exampleFormControlTextarea1"  rows="3"
+                              required="required"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput2">Project deadline</label>
-                    <input type="datetime-local" name="deadline" class="form-control" id="formGroupExampleInput2">
+                    <input type="datetime-local" name="deadline" class="form-control" id="formGroupExampleInput2" required="required">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" type="submit" class="btn btn-success" onclick="addProject()">Create project
-                </button>
+                <input type="submit" class="btn btn-success" value="Create Project"/>
             </div>
         </form>
     </div>
