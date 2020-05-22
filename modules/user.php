@@ -34,3 +34,15 @@ function create($username, $email, $f_name, $l_name, $password, $permission)
         'permissions' => $permission
     ) );
 }
+
+function update($id, $email, $password, $f_name, $l_name){
+    $database = new DB();
+    $update = array(
+        'email' => $email,
+        'password' => hash('sha256', $password),
+        'f_name' => $f_name,
+        'l_name' => $l_name
+    );
+    $update_where = array( 'id' => $id );
+    return $database->update ('users', $update, $update_where);
+}
