@@ -65,7 +65,7 @@ function get_badge($task)
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="index.html">GPMT</a>
+        <a class="navbar-brand" href="index.php">GPMT</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
                 aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -74,13 +74,13 @@ function get_badge($task)
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">Dashboard</a>
+                    <a class="nav-link" href="index.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="project.html">Projects</a>
+                    <a class="nav-link" href="project.php">Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Calendar</a>
+                    <a class="nav-link" href="calendar.php">Calendar</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -89,7 +89,7 @@ function get_badge($task)
                        aria-expanded="false"><?php echo $user[ "email" ] ?>></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="settings.php">Settings</a>
-                        <a class="dropdown-item" href="messages.html">Messages <span class="badge badge-danger">4</span></a>
+                        <a class="dropdown-item" href="messages.php">Messages <span class="badge badge-danger">4</span></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>

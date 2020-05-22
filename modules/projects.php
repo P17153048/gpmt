@@ -22,3 +22,8 @@ function create_project($title, $description, $date_created, $created_by, $statu
         'status' => $status
     ) );
 }
+
+function get_project($project_id){
+    $database = new DB();
+    return $database->get_record ('SELECT * FROM projects WHERE id = ' . $project_id);
+}
