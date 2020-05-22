@@ -6,9 +6,32 @@ require_once 'modules/tasks.php';
 $user = $_SESSION[ "user" ];
 $project = null;
 $tasks = null;
+$error = null;
+$error_type = null;
 
 if (isset( $_GET[ 'id' ] )) {
     $project_id = $_GET[ 'id' ];
+    $project = get_project ( $project_id );
+
+    if (isset( $_GET[ 'action' ] )) {
+        $action = $_GET[ 'action' ];
+        if ($project[ 'created_by' ] != $user[ 'id' ]) {
+            $error = 'You are not the owner of this project. Only project owner can change the status';
+            $error_type = 'danger';
+        } else {
+            if ($action == 'completeproject') {
+                $completed = complete_project ( $project_id );
+                $error = $completed ? 'Project Completed. Congratulations!' : 'Unable to update project status';
+                $error_type = $completed ? 'success' : 'danger';
+            } else if ($action == 'deleteproject') {
+
+                $deleted = delete_project ( $project_id );
+                $error = $deleted ? 'Project deleted!' : 'Unable to delete project. Try again!';
+                $error_type = $deleted ? 'success' : 'danger';
+            }
+        }
+
+    }
     $project = get_project ( $project_id );
     $tasks = get_tasks_by_project ( $project_id );
 }
@@ -74,100 +97,56 @@ if (isset( $_GET[ 'id' ] )) {
 
 <main class="container">
     <div class="row">
+
         <div class="col-12">
-            <h4 class="mb"><?php echo $project[ 'title' ]; ?></h4>
+            <h4 class="mb"><?php echo $project != null ? $project[ 'title' ] : ''; ?></h4>
         </div>
         <div class="col-md-8 align-self-center">
+            <?php
+                if ($error != null) {
+                    echo '<div class="alert alert-' . $error_type . '" role="alert">' . $error . '</div>';
+                }
+            ?>
             <div class="card">
                 <div class="card-body">
-                    <?php echo $project[ 'description' ]; ?>
+                    <?php echo $project != null ? $project[ 'description' ] : ''; ?>
                 </div>
             </div>
+
         </div>
-        <div class="col-md-4 align-self-center">
+        <div class="col-md-4 align-self-center" <?php echo $project != null ? '' : 'style="display:none;"' ?>>
             <div class="list-group">
                 <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
                    data-target=".bd-example-modal-xl">Create new task</a>
                 <a href="#" class="list-group-item list-group-item-action">Invite user</a>
                 <a href="#" class="list-group-item list-group-item-action">Edit project</a>
-                <a href="#" class="list-group-item list-group-item-action">Complete project</a>
-                <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Delete project</a>
+                <a href="project.php?id=<?php echo $project_id . '&action=completeproject'; ?>"
+                   class="list-group-item list-group-item-action">Complete project</a>
+                <a href="project.php?id=<?php echo $project_id . '&action=deleteproject'; ?>"
+                   class="list-group-item list-group-item-action list-group-item-danger">Delete project</a>
             </div>
         </div>
         <div class="col-12 mt-3" id="tasks">
             <?php
             foreach ($tasks as $task) {
-                $badge = $task['status'] == 1 ? 'success' : 'info';
+                $badge = $task[ 'status' ] == 1 ? 'success' : 'info';
                 echo '<div class="card border-' . $badge . ' mb-2">
                         <div class="card-body">' .
-                            ( $task[ 'status' ] == 0 ? '<div class="btn-group float-right">
+                    ( $task[ 'status' ] == 0 ? '<div class="btn-group float-right">
                                 <a href="#" class="btn btn-sm btn-warning float-right">Edit</a>
-                                <a href="projects.php?id=' . $project_id . '&completetask=' .$task['id'] . '" class="btn btn-sm btn-success float-right">Complete</a>
-                                <a href="projects.php?id=' . $project_id . '&deletetask=' .$task['id'] . '" class="btn btn-sm btn-danger float-right">Delete</a>
+                                <a href="projects.php?id=' . $project_id . '&completetask=' . $task[ 'id' ] . '" class="btn btn-sm btn-success float-right">Complete</a>
+                                <a href="projects.php?id=' . $project_id . '&deletetask=' . $task[ 'id' ] . '" class="btn btn-sm btn-danger float-right">Delete</a>
                          </div>' : '' )
-                            . '<p class="m-0">' . $task[ 'description' ] . '</p>
+                    . '<p class="m-0">' . $task[ 'description' ] . '</p>
                         </div>
                         <div class="card-footer text-muted">
-                            <p class="m-0">Deadline: <span class="badge badge-danger">' . date ( "d-m-Y", $task[ 'deadline_date' ] ) . '</span> <span class="float-right">Assigned to: <a href="#">' . $task['f_name'] . ' ' . $task['l_name'] . '</a></span></p>
-                            ' . ($task['status'] == 1 ? '<p class="m-0">Finished: <span class="badge badge-primary">' . date ( "d-m-Y", $task[ 'complete_date' ] ) . '</span></p>' : '') .
-                        '</div>
+                            <p class="m-0">Deadline: <span class="badge badge-danger">' . date ( "d-m-Y", $task[ 'deadline_date' ] ) . '</span> <span class="float-right">Assigned to: <a href="#">' . $task[ 'f_name' ] . ' ' . $task[ 'l_name' ] . '</a></span></p>
+                            ' . ( $task[ 'status' ] == 1 ? '<p class="m-0">Finished: <span class="badge badge-primary">' . date ( "d-m-Y", $task[ 'complete_date' ] ) . '</span></p>' : '' ) .
+                    '</div>
                     </div>';
-                    }
+            }
             ?>
-            <!--            <div class="card border-danger mb-2">-->
-            <!--                <div class="card-body">-->
-            <!--                    <div class="btn-group float-right">-->
-            <!--                        <a href="#" class="btn btn-sm btn-warning float-right">Edit</a>-->
-            <!--                        <a href="#" class="btn btn-sm btn-success float-right">Complete</a>-->
-            <!--                        <a href="#" class="btn btn-sm btn-danger float-right">Delete</a>-->
-            <!--                    </div>-->
-            <!---->
-            <!--                    <p class="m-0">Short description about the task needed to be done</p>-->
-            <!--                </div>-->
-            <!--                <div class="card-footer text-muted">-->
-            <!--                    <p class="m-0">Deadline: <span class="badge badge-danger">2020-01-07 15:00</span> <span class="float-right">Assigned to: <a href="#">Thomas John</a></span></p>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--            <div class="card mb-2">-->
-            <!--                <div class="card-body">-->
-            <!--                    <div class="btn-group float-right">-->
-            <!--                        <a href="#" class="btn btn-sm btn-warning float-right">Edit</a>-->
-            <!--                        <a href="#" class="btn btn-sm btn-success float-right">Complete</a>-->
-            <!--                        <a href="#" class="btn btn-sm btn-danger float-right">Delete</a>-->
-            <!--                    </div>-->
-            <!---->
-            <!--                    <p class="m-0">Short description about the task needed to be done</p>-->
-            <!--                </div>-->
-            <!--                <div class="card-footer text-muted">-->
-            <!--                    <p class="m-0">Deadline: <span class="badge badge-danger">2020-01-06 15:00</span> <span class="float-right">Assigned to: <a href="#">Thomas John</a></span></p>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--            <div class="card mb-2">-->
-            <!--                <div class="card-body">-->
-            <!--                    <div class="btn-group float-right">-->
-            <!--                        <a href="#" class="btn btn-sm btn-warning float-right">Edit</a>-->
-            <!--                        <a href="#" class="btn btn-sm btn-success float-right">Complete</a>-->
-            <!--                        <a href="#" class="btn btn-sm btn-danger float-right">Delete</a>-->
-            <!--                    </div>-->
-            <!---->
-            <!--                    <p class="m-0">Short description about the task needed to be done</p>-->
-            <!--                </div>-->
-            <!--                <div class="card-footer text-muted">-->
-            <!--                    <p class="m-0">Deadline: <span class="badge badge-warning">2020-01-05 15:00</span> <span class="float-right">Assigned to: <a href="#">Thomas John</a></span></p>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--            <div class="card border-success text-success mb-2">-->
-            <!--                <div class="card-body">-->
-            <!--                    <p class="m-0">Short description about the task needed to be done</p>-->
-            <!--                </div>-->
-            <!--                <div class="card-footer text-muted">-->
-            <!--                    <p class="m-0">-->
-            <!--                        Deadline: <span class="badge badge-danger">2020-01-06 15:00</span>-->
-            <!--                        <span class="float-right">Assigned to: <a href="#">Thomas John</a></span>-->
-            <!--                    </p>-->
-            <!--                    <p class="m-0">Finished: <span class="badge badge-primary">2020-01-06 19:00</span></p>-->
-            <!--                </div>-->
-            <!--            </div>-->
+
         </div>
     </div>
 </main>

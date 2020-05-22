@@ -27,3 +27,18 @@ function get_project($project_id){
     $database = new DB();
     return $database->get_record ('SELECT * FROM projects WHERE id = ' . $project_id);
 }
+
+function complete_project($project_id){
+    $database = new DB();
+    $update = array(
+        'status' => 1
+    );
+    $update_where = array( 'id' => $project_id );
+    return $database->update ('projects', $update, $update_where);
+}
+
+function delete_project($project_id){
+    $database = new DB();
+    $where = array( 'id' => $project_id);
+    return $database->delete( 'projects', $where, 1 );
+}
