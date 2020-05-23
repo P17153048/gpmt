@@ -2,8 +2,10 @@
 session_start ();
 require_once 'modules/projects.php';
 require_once 'modules/tasks.php';
+require_once 'modules/user.php';
 
 $user = $_SESSION[ "user" ];
+$users = get_all_users ();
 $project = null;
 $tasks = null;
 $error = null;
@@ -13,6 +15,15 @@ if (isset( $_GET[ 'id' ] )) {
     $project_id = $_GET[ 'id' ];
     $project = get_project ( $project_id );
 
+    if(isset($_POST['assign_to'])){
+        $task_description = $_POST['description'];
+        $task_assigned_to = $_POST['assign_to'];
+        $task_deadline = strtotime($_POST['deadline']);
+
+        $added_task = add_task ($project_id, $task_assigned_to, $task_description, $task_deadline, 0);
+        $error = $added_task ? 'Task created successfully!' : 'Unable to create task. Try again!';
+        $error_type = $added_task ? 'success' : 'danger';
+    }
     if (isset( $_GET[ 'action' ] )) {
         $action = $_GET[ 'action' ];
         if ($project[ 'created_by' ] != $user[ 'id' ]) {
@@ -153,7 +164,7 @@ if (isset( $_GET[ 'id' ] )) {
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
-        <form class="modal-content">
+        <form class="modal-content" name="create-task" method="POST" action="project.php?id=<?php echo $project_id; ?>">
             <div class="modal-header">
                 <h5 class="modal-title">New task</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -163,10 +174,12 @@ if (isset( $_GET[ 'id' ] )) {
             <div class="modal-body">
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Assign to</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                        <option value="Thomas John">Thomas John</option>
-                        <option value="John Smith">John Smith</option>
-                        <option value="Morgan Freeman">Morgan Freeman</option>
+                    <select class="form-control" name="assign_to" id="exampleFormControlSelect1" required>
+                        <?php
+                            foreach ($users as $u){
+                                echo '<option value="' . $u['id'] . '">' . $u['f_name'] . ' ' . $u['l_name'] . '</option>';
+                            }
+                        ?>
                     </select>
                 </div>
                 <div class="form-group">
@@ -176,12 +189,12 @@ if (isset( $_GET[ 'id' ] )) {
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput2">Deadline</label>
-                    <input type="datetime-local" name="deadline" class="form-control" id="formGroupExampleInput2">
+                    <input type="datetime-local" name="deadline" class="form-control" id="formGroupExampleInput2" required>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" type="submit" class="btn btn-success" onclick="addTask()">Add task</button>
+                <input type="submit" class="btn btn-success" value="Add task">
             </div>
         </form>
     </div>

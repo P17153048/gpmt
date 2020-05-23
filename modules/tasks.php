@@ -17,3 +17,14 @@ function get_tasks_by_project($project_id){
                                                 INNER JOIN users u ON u.id = t.user_id
                                         	WHERE t.project_id =" . $project_id);
 }
+
+function add_task($project_id, $user_id, $description, $deadline_date, $status){
+    $database = new DB();
+    return $database->insert ( 'tasks', array(
+        'project_id' => $project_id,
+        'user_id' => $user_id,
+        'description' => $description,
+        'deadline_date' => $deadline_date,
+        'status' => $status
+    ) );
+}

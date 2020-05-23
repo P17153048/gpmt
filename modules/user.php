@@ -46,3 +46,8 @@ function update($id, $email, $password, $f_name, $l_name){
     $update_where = array( 'id' => $id );
     return $database->update ('users', $update, $update_where);
 }
+
+function get_all_users(){
+    $database = new DB();
+    return $database->get_results( "SELECT id, f_name, l_name, username, email FROM users ORDER BY f_name ASC" );
+}
