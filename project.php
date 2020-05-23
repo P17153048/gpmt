@@ -39,6 +39,17 @@ if (isset( $_GET[ 'id' ] )) {
                 $deleted = delete_project ( $project_id );
                 $error = $deleted ? 'Project deleted!' : 'Unable to delete project. Try again!';
                 $error_type = $deleted ? 'success' : 'danger';
+            }else if($action == 'invite_user'){
+                $email = $_POST['user_email'];
+                $invited = invite_user ($project_id, $email);
+                $error = $invited ? 'User has been invited to the project' : 'Unable to invite user to the project';
+                $error_type = $invited ? 'success' : 'danger';
+            }else if($action == 'edit_project'){
+                $title = $_POST['title'];
+                $description = $_POST['description'];
+                $updated = update_project ($project_id, $title, $description);
+                $error = $updated ? 'Project updated successfully' : 'Unable to update project';
+                $error_type = $updated ? 'success' : 'danger';
             }
         }
 
@@ -128,11 +139,16 @@ if (isset( $_GET[ 'id' ] )) {
         <div class="col-md-4 align-self-center" <?php echo $project != null ? '' : 'style="display:none;"' ?>>
             <div class="list-group">
                 <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
-                   data-target=".bd-example-modal-xl">Create new task</a>
-                <a href="#" class="list-group-item list-group-item-action">Invite user</a>
-                <a href="#" class="list-group-item list-group-item-action">Edit project</a>
-                <a href="project.php?id=<?php echo $project_id . '&action=completeproject'; ?>"
-                   class="list-group-item list-group-item-action">Complete project</a>
+                   data-target="#create_task">Create new task</a>
+                <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
+                   data-target="#invite_user">Invite user</a>
+                <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
+                   data-target="#edit_project">Edit project</a>
+                <?php
+                    echo $project['status'] == 0 ? '<a href="project.php?id=' . $project_id . '&action=completeproject"
+                   class="list-group-item list-group-item-action">Complete project</a>' : ''
+                ?>
+
                 <a href="project.php?id=<?php echo $project_id . '&action=deleteproject'; ?>"
                    class="list-group-item list-group-item-action list-group-item-danger">Delete project</a>
             </div>
@@ -161,7 +177,7 @@ if (isset( $_GET[ 'id' ] )) {
         </div>
     </div>
 </main>
-<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
+<div class="modal fade bd-example-modal-xl" id="create_task" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <form class="modal-content" name="create-task" method="POST" action="project.php?id=<?php echo $project_id; ?>">
@@ -199,6 +215,65 @@ if (isset( $_GET[ 'id' ] )) {
         </form>
     </div>
 </div>
+
+<div class="modal fade" id="invite_user">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content" method="POST" name="invite_user" action="project.php?id=<?php echo $project_id; ?>&action=invite_user">
+            <div class="modal-header">
+                <h5 class="modal-title">Invite user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" style="display:none" id="error-msg-invite"></div>
+                <div class="alert alert-success" style="display:none" id="success-msg-invite"></div>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Send invite to</label>
+                    <select class="form-control" name="user_email" id="exampleFormControlSelect1" required>
+                        <?php
+                        foreach ($users as $u){
+                            echo '<option value="' . $u['id'] . '">' . $u['f_name'] . ' ' . $u['l_name'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" id="invite-user" class="btn btn-success" value="Send invite"></input>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="edit_project">
+    <div class="modal-dialog modal-xl" role="document">
+        <form class="modal-content" method="post" name="edit_project" action="project.php?id=<?php echo $project_id; ?>&action=edit_project">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="project_title">Project title</label>
+                    <input type="text" name="title" required class="form-control" id="project_title" placeholder="Project title" value="<?php echo $project['title']; ?>">
+                </div>
+                <div class="form-group">
+                    <label for="project_desc">Project description</label>
+                    <textarea class="form-control" name="description" id="project_desc" rows="3" required><?php echo $project['description']; ?></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-success" value="Save"></input>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     function addTask() {
         $('.bd-example-modal-xl').modal('hide');

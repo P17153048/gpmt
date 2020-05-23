@@ -31,15 +31,70 @@ function get_project($project_id){
 
 function complete_project($project_id){
     $database = new DB();
+    $tasks_completed = complete_tasks ($project_id);
     $update = array(
         'status' => 1
     );
     $update_where = array( 'id' => $project_id );
-    return $database->update ('projects', $update, $update_where);
+    return $tasks_completed && $database->update ('projects', $update, $update_where);
 }
 
 function delete_project($project_id){
     $database = new DB();
     $where = array( 'id' => $project_id);
-    return $database->delete( 'projects', $where, 1 );
+    $deleted_invites = delete_invites ($project_id);
+    $deleted_tasks = delete_tasks ($project_id);
+    return $deleted_invites && $deleted_tasks && $database->delete( 'projects', $where, 1 );
+}
+
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+function invite_user($project_id, $user_id){
+    $database = new DB();
+    return $database->insert ( 'invites', array(
+        'id' => generateRandomString (),
+        'project_id' => $project_id,
+        'user_id' => $user_id,
+        'confirmed' => 0
+    ) );
+}
+
+function update_project($project_id, $title, $description){
+    $database = new DB();
+    $update = array(
+        'title' => $title,
+        'description' => $description
+    );
+    $update_where = array( 'id' => $project_id );
+    return $database->update ('projects', $update, $update_where);
+}
+
+function delete_invites($project_id){
+    $database = new DB();
+    $where = array( 'project_id' => $project_id);
+    return $database->delete( 'invites', $where, 999999999 );
+}
+
+function delete_tasks($project_id){
+    $database = new DB();
+    $where = array( 'project_id' => $project_id);
+    return $database->delete( 'tasks', $where, 999999999 );
+}
+
+function complete_tasks($project_id){
+    $database = new DB();
+    $update = array(
+        'status' => 1,
+        'complete_date' => strtotime (date('Y-m-d H:i:s'))
+    );
+    $update_where = array( 'project_id' => $project_id );
+    return $database->update ('tasks', $update, $update_where);
 }
