@@ -70,7 +70,7 @@ if (isset( $_POST[ 'submit' ] )) {
                     <a class="nav-link" href="index.php">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="project.php">Projects</a>
+                    <a class="nav-link" href="projects.php">Projects</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="calendar.php">Calendar</a>
