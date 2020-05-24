@@ -50,6 +50,15 @@ if (isset( $_GET[ 'id' ] )) {
                 $updated = update_project ($project_id, $title, $description);
                 $error = $updated ? 'Project updated successfully' : 'Unable to update project';
                 $error_type = $updated ? 'success' : 'danger';
+            }else if($action = 'edit_task'){
+                $task_id = $_POST['edit_task_id'];
+                $task_assigned_to = $_POST['assigned_to'];
+                $task_description = $_POST['task_description'];
+                $task_deadline = $_POST['task_deadline'];
+
+                $task_updated = update_task ($task_id, $task_assigned_to, $task_description, strtotime ($task_deadline));
+                $error = $task_updated ? 'Task updated successfully' : 'Unable to update task';
+                $error_type = $task_updated ? 'success' : 'danger';
             }
         }
 
@@ -160,7 +169,7 @@ if (isset( $_GET[ 'id' ] )) {
                 echo '<div class="card border-' . $badge . ' mb-2">
                         <div class="card-body">' .
                     ( $task[ 'status' ] == 0 ? '<div class="btn-group float-right">
-                                <a href="#" class="btn btn-sm btn-warning float-right">Edit</a>
+                                <a href="#" data-toggle="modal" data-target="#edit_task_' . $task['id'] . '" class="btn btn-sm btn-warning float-right">Edit</a>
                                 <a href="projects.php?id=' . $project_id . '&completetask=' . $task[ 'id' ] . '" class="btn btn-sm btn-success float-right">Complete</a>
                                 <a href="projects.php?id=' . $project_id . '&deletetask=' . $task[ 'id' ] . '" class="btn btn-sm btn-danger float-right">Delete</a>
                          </div>' : '' )
@@ -171,6 +180,42 @@ if (isset( $_GET[ 'id' ] )) {
                             ' . ( $task[ 'status' ] == 1 ? '<p class="m-0">Finished: <span class="badge badge-primary">' . date ( "d-m-Y", $task[ 'complete_date' ] ) . '</span></p>' : '' ) .
                     '</div>
                     </div>';
+
+              echo  '<div class="modal fade" id="edit_task_' . $task['id'] . '">
+                        <div class="modal-dialog modal-xl" role="document">
+                            <form class="modal-content" method="post" name="edit_task_' . $task['id'] . '" action="project.php?id=' . $project_id . '&action=edit_task">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Task</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="edit_task_assigned_to_' . $task['id'] . '">Assigned to</label>
+                                        <select class="form-control" name="assigned_to" id="edit_task_assigned_to_' . $task['id'] . '" required>';
+                                            foreach ($users as $u){
+                                                echo $u['id'] == $task['user_id'] ? '<option value="' . $u['id'] . '" selected>' . $u['f_name'] . ' ' . $u['l_name'] . '</option>' :  '<option value="' . $u['id'] . '">' . $u['f_name'] . ' ' . $u['l_name'] . '</option>';
+                                            }
+            echo '</select>
+                  </div>
+                    <div class="form-group">
+                        <label for="task_description_' . $task['id'] . '">Task description</label>
+                        <textarea class="form-control" name="task_description" id="task_description_' . $task['id'] . '" rows="3" required>' . $task['description'] . '</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_deadline_' . $task['id'] . '">Deadline</label>
+                        <input type="datetime-local" name="task_deadline" class="form-control" value="' . date('Y-m-d\TH:i', $task['deadline_date']) . '" id="task_deadline_' . $task['id'] . '" required>
+                    </div>
+                    <input type="hidden" name="edit_task_id" value="' . $task['id'] . '">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Save"></input>
+                </div>
+                </form>
+                </div>
+                </div>';
             }
             ?>
 

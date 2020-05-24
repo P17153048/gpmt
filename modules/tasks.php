@@ -28,3 +28,14 @@ function add_task($project_id, $user_id, $description, $deadline_date, $status){
         'status' => $status
     ) );
 }
+
+function update_task($task_id, $user_id, $description, $deadline_date){
+    $database = new DB();
+    $update = array(
+        'user_id' => $user_id,
+        'description' => $description,
+        'deadline_date' => $deadline_date
+    );
+    $update_where = array( 'id' => $task_id );
+    return $database->update ('tasks', $update, $update_where);
+}
