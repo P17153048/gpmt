@@ -20,7 +20,7 @@ if(isset($_POST['send_message'])){
     $error_type = $message_sent ? 'success' : 'danger';
 }
 $unread_messages = get_unread_message_count ($user['id']);
-
+$messages = get_all_messages ($user['id']);
 
 
 
@@ -95,8 +95,78 @@ $unread_messages = get_unread_message_count ($user['id']);
                 ?>
             </div>
             <div class="col-12">
-                <table class="table table-bordered">
-                </table>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#received_messages">Received Messages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#sent_messages">Sent Messages</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane container active mt-4" id="received_messages">
+                        <?php
+                            $received_messages = get_all_received_messages ($user['id']);
+                        ?>
+                        <table class="table table-bordered">
+                            <?php
+                            if ($received_messages) {
+                                ?>
+                                <tr>
+                                    <th>Title</th>
+                                    <th width="20%">From</th>
+                                    <th width="20%">Date</th>
+                                </tr>
+                                <?php
+                                foreach ($received_messages as $message) {
+                                    ?>
+                                    <tr <?php if ($message['status']==0) echo 'class=""'; ?>>
+                                        <td><a href="message.php?id=<?php echo $message['id'];?>"><?php echo $message['title']; ?></a></td>
+                                        <td><a href="?new=<?php echo $message['email'];?>"><?php echo $message['f_name']." ".$message['l_name']; ?></a></td>
+                                        <td><?php echo date("d-m-Y H:iA", $message['date']); ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                            } else {
+                                echo '<div class="alert alert-danger w-100">No messages</div>';
+                            }
+                            ?>
+                        </table>
+                    </div>
+                    <div class="tab-pane container mt-4 fade" id="sent_messages">
+                        <?php
+                        $sent_messages = get_all_sent_messages ($user['id']);
+                        ?>
+                        <table class="table table-bordered">
+                            <?php
+                            if ($sent_messages) {
+                                ?>
+                                <tr>
+                                    <th>Title</th>
+                                    <th width="20%">From</th>
+                                    <th width="20%">Date</th>
+                                </tr>
+                                <?php
+                                foreach ($sent_messages as $message) {
+                                    ?>
+                                    <tr <?php if ($message['status']==0) echo 'class=""'; ?>>
+                                        <td><a href="message.php?id=<?php echo $message['id'];?>"><?php echo $message['title']; ?></a></td>
+                                        <td><a href="?new=<?php echo $message['email'];?>"><?php echo $message['f_name']." ".$message['l_name']; ?></a></td>
+                                        <td><?php echo date("d-m-Y H:iA", $message['date']); ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                            } else {
+                                echo '<div class="alert alert-danger w-100">No messages</div>';
+                            }
+                            ?>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
     </div>

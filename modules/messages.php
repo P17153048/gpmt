@@ -17,3 +17,22 @@ function send_message($sent_id, $deliver_id, $title, $message, $status, $date){
         'date' => $date
     ) );
 }
+
+function get_all_messages($user_id){
+    $database = new DB();
+    return $database->get_results ('SELECT * FROM messages WHERE sent_id = ' . $user_id . ' OR deliver_id = ' . $user_id);
+}
+
+function get_all_received_messages($user_id){
+    $database = new DB();
+    return $database->get_results ('SELECT m.*, u.f_name, u.l_name, u.email, u.username FROM messages m 
+                                                INNER JOIN users u ON u.id = m.sent_id
+                                            WHERE m.deliver_id =' . $user_id);
+}
+
+function get_all_sent_messages($user_id){
+    $database = new DB();
+    return $database->get_results ('SELECT m.*, u.f_name, u.l_name, u.email, u.username FROM messages m 
+                                                INNER JOIN users u ON u.id = m.deliver_id
+                                            WHERE m.sent_id =' . $user_id);
+}
