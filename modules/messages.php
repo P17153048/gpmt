@@ -1,5 +1,6 @@
 <?php
 require_once './data/database.php';
+require_once 'user.php';
 
 function get_unread_message_count($user_id){
     $database = new DB();
@@ -8,7 +9,7 @@ function get_unread_message_count($user_id){
 
 function send_message($sent_id, $deliver_id, $title, $message, $status, $date){
     $database = new DB();
-    return $database->insert ( 'messages', array(
+    $sent =  $database->insert ( 'messages', array(
         'sent_id' => $sent_id,
         'deliver_id' => $deliver_id,
         'title' => $title,
@@ -16,6 +17,20 @@ function send_message($sent_id, $deliver_id, $title, $message, $status, $date){
         'status' => $status,
         'date' => $date
     ) );
+    $id = $database->lastid ();
+    try{
+        if ($id) {
+            $subject = "New message";
+            $message = "You've got new message. Click this link to view: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI'])."/message.php?id=".$id;
+            $user = get_user_by_id ($deliver_id);
+            $email = $user['email'];
+            sendMail($subject, $message, $email);
+        }
+    }catch(Exception $e){
+
+    }
+
+    return $sent;
 }
 
 function get_all_messages($user_id){

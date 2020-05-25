@@ -5,11 +5,23 @@ require_once 'modules/messages.php';
 
 $user = $_SESSION['user'];
 $date = null;
+$error = null;
+$error_type = null;
 
-if (isset($_GET['date'])) {
-    $date = $_GET['date'];
+if (isset($_POST['date'])) {
+    $date = $_POST['date'];
 } else {
     $date = date("d-m-Y");
+}
+
+if(isset($_GET['action'])){
+    $action = $_GET['action'];
+    if($action == 'complete_task'){
+        $task_id = $_GET['task_id'];
+        $task_completed = complete_task ($task_id);
+        $error = $task_completed ? 'Task completed successfully' : 'Unable to update task';
+        $error_type = $task_completed ? 'success' : 'danger';
+    }
 }
 
 $tasks = get_tasks_by_date ($user['id'], $date);
@@ -77,14 +89,20 @@ $unread_messages = get_unread_message_count ($user['id']);
 <main class="container">
     <div class="row">
         <div class="col-12 mb-2">
-            <form class="form-inline" id="form" method="get">
+            <?php
+            if ($error != null) {
+                echo '<div class="alert alert-' . $error_type . '" role="alert">' . $error . '</div>';
+            }
+            ?>
+
+            <form class="form-inline" id="form" method="POST" action="calendar.php">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <a href="?date=<?=date('d-m-Y', strtotime('-1 day 00:00'))?>" class="btn btn-primary btn-sm">Yesterday</a>
                         <a href="?date=<?=date('d-m-Y', strtotime('00:00'))?>" class="btn btn-primary btn-sm">Today</a>
                         <a href="?date=<?=date('d-m-Y', strtotime('+1 day 00:00'))?>" class="btn btn-primary btn-sm">Tomorrow</a>
                     </div>
-                    <input type="date" id="date" class="form-control form-control-sm" value="<?=$date?>" >
+                    <input type="date" id="date" class="form-control form-control-sm" value="<? echo date('Y-m-d',$date) ?>" >
                     <input type="hidden" name="date" id="post_date" value="">
                 </div>
             </form>
@@ -133,7 +151,7 @@ $unread_messages = get_unread_message_count ($user['id']);
         $('#date').change(function(){
             debugger;
             let selectedDate = $("#date").val();
-            let postDate = new Date(selectedDate).toLocaleDateString();
+            let postDate = selectedDate.split('-').reverse().join('-');
             $('#post_date').val(postDate);
             $('#form').submit();
         });

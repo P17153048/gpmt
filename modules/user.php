@@ -51,3 +51,8 @@ function get_all_users(){
     $database = new DB();
     return $database->get_results( "SELECT id, f_name, l_name, username, email FROM users ORDER BY f_name ASC" );
 }
+
+function get_user_by_id($user_id){
+    $database = new DB();
+    return $database->get_record( "SELECT id, f_name, l_name, username, email FROM users WHERE id = " .  $user_id);
+}

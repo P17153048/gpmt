@@ -1,5 +1,6 @@
 <?php
 require_once './data/database.php';
+require_once 'user.php';
 
 function get_projects()
 {
@@ -59,12 +60,23 @@ function generateRandomString($length = 10) {
 
 function invite_user($project_id, $user_id){
     $database = new DB();
-    return $database->insert ( 'invites', array(
+    $user_invited = $database->insert ( 'invites', array(
         'id' => generateRandomString (),
         'project_id' => $project_id,
         'user_id' => $user_id,
         'confirmed' => 0
     ) );
+    try{
+        $subject = "New message";
+        $message = "You're invited to a new project. Click this link to view: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI'])."/projects.php";
+        $user = get_user_by_id ($user_id);
+        $email = $user['email'];
+        sendMail($subject, $message, $email);
+    }catch (Exception $e){
+
+    }
+
+    return $user_invited;
 }
 
 function update_project($project_id, $title, $description){

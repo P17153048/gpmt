@@ -167,6 +167,12 @@ $unread_messages = get_unread_message_count ($user['id']);
         <div class="col-12 mt-3" id="tasks">
             <?php
             foreach ($tasks as $task) {
+                if($project['created_by'] != $user['id']){
+                    if($task['user_id'] != $user['id']){
+                        continue;
+                    }
+                }
+
                 $badge = $task[ 'status' ] == 1 ? 'success' : 'info';
                 echo '<div class="card border-' . $badge . ' mb-2">
                         <div class="card-body">' .

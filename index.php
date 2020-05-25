@@ -116,7 +116,7 @@ function get_badge($task)
                             </div>
                             <div class="card-footer text-muted">
                                 <p class="m-0">Deadline: <span class="badge badge-' . get_badge ( $task ) . '">' . date ( "d-m-Y", $task[ 'deadline_date' ] ) . '</span></p>    
-                                ' . ( $task[ 'status' ] == 1 ? '<p class="m-0">Finished: <span class="badge badge-primary">' . date ( "d-m-y", $task[ 'complete_date' ] ) . '</span></p>' : '' )
+                                ' . ( $task[ 'status' ] == 1 ? '<p class="m-0">Finished: <span class="badge badge-primary">' . date ( "d-m-Y", $task[ 'complete_date' ] ) . '</span></p>' : '' )
                     . '</div>
                         </div>';
             }
