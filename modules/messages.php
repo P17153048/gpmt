@@ -36,3 +36,19 @@ function get_all_sent_messages($user_id){
                                                 INNER JOIN users u ON u.id = m.deliver_id
                                             WHERE m.sent_id =' . $user_id);
 }
+
+function get_message($message_id){
+    $database = new DB();
+    return $database->get_record ('SELECT m.*, u.f_name, u.l_name, u.email, u.username FROM messages m 
+                                                INNER JOIN users u ON u.id = m.sent_id
+                                            WHERE m.id =' . $message_id);
+}
+
+function read_message($message_id){
+    $database = new DB();
+    $update = array(
+        'status' => 1
+    );
+    $update_where = array( 'id' => $message_id );
+    $database->update ('messages', $update, $update_where);
+}

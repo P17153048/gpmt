@@ -13,7 +13,7 @@ if(isset($_POST['send_message'])){
     $title = $_POST['title'];
     $message = $_POST['message'];
     $status = 0;
-    $date = strtotime (date("d-m-Y"));
+    $date = strtotime (date("d-m-Y h:i:s"));
 
     $message_sent = send_message ($sent_id, $deliver_id, $title, $message, $status, $date);
     $error = $message_sent ? 'Message sent successfully!' : 'Unable to send message. Try again!';
@@ -98,7 +98,7 @@ $messages = get_all_messages ($user['id']);
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#received_messages">Received Messages</a>
+                        <a class="nav-link active" data-toggle="tab" href="#received_messages">Received Messages <?php echo $unread_messages > 0 ? '<span class="badge badge-danger">' . $unread_messages . '</span>' : ''; ?></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#sent_messages">Sent Messages</a>
@@ -123,7 +123,7 @@ $messages = get_all_messages ($user['id']);
                                 <?php
                                 foreach ($received_messages as $message) {
                                     ?>
-                                    <tr <?php if ($message['status']==0) echo 'class=""'; ?>>
+                                    <tr <?php if ($message['status']==0) echo 'class="table-danger"'; ?>>
                                         <td><a href="message.php?id=<?php echo $message['id'];?>"><?php echo $message['title']; ?></a></td>
                                         <td><a href="?new=<?php echo $message['email'];?>"><?php echo $message['f_name']." ".$message['l_name']; ?></a></td>
                                         <td><?php echo date("d-m-Y H:iA", $message['date']); ?></td>
