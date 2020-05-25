@@ -107,7 +107,7 @@ function get_badge($task)
             <h4>Tasks assigned to me</h4>
             <?php
             foreach ($tasks as $task) {
-                echo '<div class="card border-' . get_badge ( $task ) . ' mb-2">
+                echo '<div class="card border-' . get_badge ( $task ) . ' mb-2 shadow">
                             <h5 class="card-header">
                                 <a href="project.php?id=' . $task[ 'project_id' ] . '" class="stretched-link">' . $task[ 'project_title' ] . '</a>
                             </h5>
@@ -132,9 +132,17 @@ function get_badge($task)
             <div class="list-group" id="project-list">
                 <?php
                 foreach ($projects as $project) {
-                    echo '<a href="project.php?id=' . $project[ 'id' ] . '" class="list-group-item list-group-item-action">' . $project[ 'title' ] . ($project['unfinished_tasks'] > 0 ? '<span class="badge badge-info float-right" title="Unifinished tasks">' . $project[ 'unfinished_tasks' ] : '') . '</span></a>';
+                    echo '<a href="project.php?id=' . $project[ 'id' ] . '" class="list-group-item list-group-item-action flex-column shadow align-items-start ' . ($project['created_by'] == $user['id'] ? 'active': '') . '">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">' . $project[ 'title' ] . '</h5>
+                        <small>' . ( $project[ 'unfinished_tasks' ] > 0 ? '<span class="badge badge-danger float-right" title="Unifinished tasks">' . $project[ 'unfinished_tasks' ] : '' ) . '</span></small>
+                    </div>
+                    <p class="mb-1">' . $project['description'] . '</p>
+                    <small class="float-right">Owner: <strong>' . $project['f_name'] . ' ' . $project['l_name'] . '</strong></small>
+                </a>';
                 }
                 ?>
+
             </div>
         </div>
     </div>
@@ -168,7 +176,7 @@ function get_badge($task)
                 </div>
                 <div class="form-group">
                     <label for="formGroupExampleInput2">Project deadline</label>
-                    <input type="datetime-local" name="deadline" class="form-control" id="formGroupExampleInput2" required="required">
+                    <input type="datetime-local" name="deadline" value="<?php echo date("Y-m-j h:i A")?>" class="form-control" id="formGroupExampleInput2" required="required">
                 </div>
             </div>
             <div class="modal-footer">

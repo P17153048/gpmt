@@ -1,6 +1,7 @@
 <?php
 require_once './data/database.php';
 require_once 'user.php';
+require_once 'mailer.php';
 
 function get_unread_message_count($user_id){
     $database = new DB();

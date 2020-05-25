@@ -58,6 +58,7 @@ if (isset( $_POST[ "inputEmail" ] )) {
         }
 
     </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -79,7 +80,7 @@ if (isset( $_POST[ "inputEmail" ] )) {
 </nav>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-6 col-11">
+        <div class="col-lg-4 col-md-6 col-11 p-5 login-form border-info">
             <?php
             if ($error != null) {
                 if ($valid == 0) {
@@ -102,10 +103,10 @@ if (isset( $_POST[ "inputEmail" ] )) {
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input type="password" id="inputPassword" name="inputPassword" class="form-control mb-3"
                        placeholder="Password" required="">
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me"> Remember me
-                    </label>
+
+                <div class="custom-control custom-switch float-left mb-2">
+                    <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me">
+                    <label class="custom-control-label" for="remember-me">Remember me</label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             </form>

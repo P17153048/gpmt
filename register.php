@@ -43,6 +43,7 @@ if (isset( $_POST[ 'inputFName' ] )) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="css/style.css">
     <title>Register</title>
     <style>
         body {
@@ -82,7 +83,7 @@ if (isset( $_POST[ 'inputFName' ] )) {
 </nav>
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-6 col-11">
+        <div class="col-lg-4 col-md-6 col-11 p-5 login-form border-info">
             <?php
             if ($error != null) {
                 echo '<div class="alert alert-' . ( $error_type == 'error' ? 'danger' : 'success' ) . '" role="alert">' . $error . '</div>';
@@ -105,10 +106,9 @@ if (isset( $_POST[ 'inputFName' ] )) {
                 <label for="inputPassword2" class="sr-only">Repeat Password</label>
                 <input type="password" id="inputPassword2" name="inputPassword2" class="form-control mb-3" placeholder="Confirm Password"
                        required="">
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me"> Remember me
-                    </label>
+                <div class="custom-control custom-switch float-left mb-2">
+                    <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me">
+                    <label class="custom-control-label" for="remember-me">Remember me</label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
             </form>
