@@ -3,6 +3,7 @@ session_start ();
 require_once 'modules/projects.php';
 require_once 'modules/tasks.php';
 require_once 'modules/user.php';
+require_once 'modules/messages.php';
 
 $user = $_SESSION[ "user" ];
 $users = get_all_users ();
@@ -66,6 +67,7 @@ if (isset( $_GET[ 'id' ] )) {
     $project = get_project ( $project_id );
     $tasks = get_tasks_by_project ( $project_id );
 }
+$unread_messages = get_unread_message_count ($user['id']);
 
 ?>
 <!doctype html>
@@ -116,7 +118,7 @@ if (isset( $_GET[ 'id' ] )) {
                        aria-expanded="false"><?php echo $user[ 'email' ]; ?></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="settings.php">Settings</a>
-                        <a class="dropdown-item" href="messages.php">Messages <span class="badge badge-danger">4</span></a>
+                        <a class="dropdown-item" href="messages.php">Messages <?php echo $unread_messages > 0 ? '<span class="badge badge-danger">' . $unread_messages . '</span>' : ''; ?></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>

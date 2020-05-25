@@ -2,6 +2,7 @@
 session_start ();
 require_once 'modules/projects.php';
 require_once 'modules/tasks.php';
+require_once 'modules/messages.php';
 
 $user = $_SESSION[ "user" ];
 
@@ -26,6 +27,7 @@ $projects = get_projects ();
 $tasks = get_tasks ( $user[ 'id' ] );
 $error = null;
 $error_type = null;
+$unread_messages = get_unread_message_count ($user['id']);
 
 function get_badge($task)
 {
@@ -89,7 +91,7 @@ function get_badge($task)
                        aria-expanded="false"><?php echo $user[ "email" ] ?>></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="settings.php">Settings</a>
-                        <a class="dropdown-item" href="messages.php">Messages <span class="badge badge-danger">4</span></a>
+                        <a class="dropdown-item" href="messages.php">Messages <?php echo $unread_messages > 0 ? '<span class="badge badge-danger">' . $unread_messages . '</span>' : ''; ?></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>

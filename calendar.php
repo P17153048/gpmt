@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once './modules/tasks.php';
+require_once 'modules/messages.php';
+
 $user = $_SESSION['user'];
 $date = null;
 
@@ -11,7 +13,7 @@ if (isset($_GET['date'])) {
 }
 
 $tasks = get_tasks_by_date ($user['id'], $date);
-
+$unread_messages = get_unread_message_count ($user['id']);
 
 ?>
 <!doctype html>
@@ -62,7 +64,7 @@ $tasks = get_tasks_by_date ($user['id'], $date);
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="settings.php">Settings</a>
-                        <a class="dropdown-item" href="messages.php">Messages <span class="badge badge-danger">4</span></a>
+                        <a class="dropdown-item" href="messages.php">Messages <?php echo $unread_messages > 0 ? '<span class="badge badge-danger">' . $unread_messages . '</span>' : ''; ?></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>
