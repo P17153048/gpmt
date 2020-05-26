@@ -1,4 +1,14 @@
-.login-form{
+@import url(https://fonts.googleapis.com/css?family=Lato&display=swap);
+
+body {
+    font-family: 'Lato' !important;
+}
+
+html {
+    font-family: 'Lato' !important;
+}
+
+.login-form {
     border: 1px solid #ddd;
     border-radius: 10px;
 }
