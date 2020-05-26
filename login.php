@@ -105,7 +105,7 @@ if (isset( $_POST[ "inputEmail" ] )) {
                        placeholder="Password" required="">
 
                 <div class="custom-control custom-switch float-left mb-2">
-                    <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me">
+                    <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me" checked>
                     <label class="custom-control-label" for="remember-me">Remember me</label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

@@ -1,5 +1,4 @@
 <?php
-session_start ();
 require_once 'modules/projects.php';
 require_once 'modules/tasks.php';
 require_once 'modules/messages.php';
@@ -54,7 +53,13 @@ function get_badge($task)
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Lato';
+        }
+        </style>
     <title>Index</title>
     <style>
         main {
@@ -107,7 +112,7 @@ function get_badge($task)
             <h4>Tasks assigned to me</h4>
             <?php
             foreach ($tasks as $task) {
-                echo '<div class="card border-' . get_badge ( $task ) . ' mb-2 shadow">
+                echo '<div class="card border-' . get_badge ( $task ) . ' mb-2 shadow rounded-0"">
                             <h5 class="card-header">
                                 <a href="project.php?id=' . $task[ 'project_id' ] . '" class="stretched-link">' . $task[ 'project_title' ] . '</a>
                             </h5>
@@ -152,10 +157,10 @@ function get_badge($task)
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <form class="modal-content" name="create_project" action="index.php" method="POST">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">New project</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span class="text-white" aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">

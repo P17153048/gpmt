@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once './modules/tasks.php';
 require_once 'modules/messages.php';
 
@@ -116,7 +115,7 @@ $unread_messages = get_unread_message_count ($user['id']);
             foreach ($tasks as $task) {
                 $badge = $task[ 'status' ] == 1 ? 'success' : 'info';
                 echo '<div class="card border-' . $badge . ' mb-2">
-                        <div class="card-body">' .
+                        <div class="card-body shadow">' .
                     ( $task[ 'status' ] == 0 ? '<div class="btn-group float-right">
                                 <a href="calendar.php?action=complete_task&task_id=' . $task[ 'id' ] . '" class="btn btn-sm btn-success float-right">Complete</a>
                                 </div>' : '' )

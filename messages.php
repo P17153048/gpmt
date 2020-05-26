@@ -111,11 +111,11 @@ $messages = get_all_messages ($user['id']);
                         <?php
                             $received_messages = get_all_received_messages ($user['id']);
                         ?>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered shadow">
                             <?php
                             if ($received_messages) {
                                 ?>
-                                <tr>
+                                <tr class="shadow">
                                     <th>Title</th>
                                     <th width="20%">From</th>
                                     <th width="20%">Date</th>
@@ -140,11 +140,11 @@ $messages = get_all_messages ($user['id']);
                         <?php
                         $sent_messages = get_all_sent_messages ($user['id']);
                         ?>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered shadow">
                             <?php
                             if ($sent_messages) {
                                 ?>
-                                <tr>
+                                <tr class="shadow">
                                     <th>Title</th>
                                     <th width="20%">From</th>
                                     <th width="20%">Date</th>
@@ -174,10 +174,10 @@ $messages = get_all_messages ($user['id']);
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" id="message-modal">
     <div class="modal-dialog modal-xl" role="document">
         <form class="modal-content" name="send_message_form" method="POST" action="messages.php">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white shadow">
                 <h5 class="modal-title">Send message</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span class="text-white" aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">

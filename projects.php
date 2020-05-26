@@ -1,5 +1,4 @@
 <?php
-session_start ();
 require_once 'modules/projects.php';
 require_once 'modules/tasks.php';
 require_once 'modules/messages.php';
@@ -8,6 +7,13 @@ $user = $_SESSION[ "user" ];
 $projects = get_projects ();
 $unread_messages = get_unread_message_count ($user['id']);
 
+function get_badge($project, $user)
+{
+    if($project['created_by'] == $user['id']){
+        return 'success';
+    }
+    return '';
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -74,12 +80,12 @@ $unread_messages = get_unread_message_count ($user['id']);
         </div>
         <?php
         foreach($projects as $project){
-            echo '<div class="col-12">
-                    <div class="card border-success mb-2">
+            echo '<div class="col-4">
+                    <div class="card border-' . get_badge ($project, $user) . ' mb-2 rounded-0"">
                         <h5 class="card-header">
                             <a href="project.php?id=' . $project['id'] . '" class="stretched-link">' . $project['title'] . '</a>
                         </h5>
-                        <div class="card-body">
+                        <div class="card-body shadow">
                             <p class="m-0">' . $project['description'] . '</p>
                         </div>
                         <div class="card-footer text-muted">

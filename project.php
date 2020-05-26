@@ -140,7 +140,7 @@ $unread_messages = get_unread_message_count ($user['id']);
                     echo '<div class="alert alert-' . $error_type . '" role="alert">' . $error . '</div>';
                 }
             ?>
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-body">
                     <?php echo $project != null ? $project[ 'description' ] : ''; ?>
                 </div>
@@ -148,7 +148,7 @@ $unread_messages = get_unread_message_count ($user['id']);
 
         </div>
         <div class="col-md-4 align-self-center" <?php echo $project != null ? '' : 'style="display:none;"' ?>>
-            <div class="list-group">
+            <div class="list-group shadow">
                 <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
                    data-target="#create_task">Create new task</a>
                 <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
@@ -175,7 +175,7 @@ $unread_messages = get_unread_message_count ($user['id']);
 
                 $badge = $task[ 'status' ] == 1 ? 'success' : 'info';
                 echo '<div class="card border-' . $badge . ' mb-2">
-                        <div class="card-body">' .
+                        <div class="card-body shadow">' .
                     ( $task[ 'status' ] == 0 ? '<div class="btn-group float-right">
                                 <a href="#" data-toggle="modal" data-target="#edit_task_' . $task['id'] . '" class="btn btn-sm btn-warning float-right">Edit</a>
                                 <a href="projects.php?id=' . $project_id . '&completetask=' . $task[ 'id' ] . '" class="btn btn-sm btn-success float-right">Complete</a>
@@ -192,10 +192,10 @@ $unread_messages = get_unread_message_count ($user['id']);
               echo  '<div class="modal fade" id="edit_task_' . $task['id'] . '">
                         <div class="modal-dialog modal-xl" role="document">
                             <form class="modal-content" method="post" name="edit_task_' . $task['id'] . '" action="project.php?id=' . $project_id . '&action=edit_task">
-                                <div class="modal-header">
+                                <div class="modal-header bg-primary text-white shadow">
                                     <h5 class="modal-title">Edit Task</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                        <span class="text-white" aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
@@ -234,10 +234,10 @@ $unread_messages = get_unread_message_count ($user['id']);
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <form class="modal-content" name="create-task" method="POST" action="project.php?id=<?php echo $project_id; ?>">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">New task</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span class="text-white" aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -272,10 +272,10 @@ $unread_messages = get_unread_message_count ($user['id']);
 <div class="modal fade" id="invite_user">
     <div class="modal-dialog" role="document">
         <form class="modal-content" method="POST" name="invite_user" action="project.php?id=<?php echo $project_id; ?>&action=invite_user">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Invite user</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span class="text-white" aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -303,10 +303,10 @@ $unread_messages = get_unread_message_count ($user['id']);
 <div class="modal fade" id="edit_project">
     <div class="modal-dialog modal-xl" role="document">
         <form class="modal-content" method="post" name="edit_project" action="project.php?id=<?php echo $project_id; ?>&action=edit_project">
-            <div class="modal-header">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">Edit Project</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span class="text-white" aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
