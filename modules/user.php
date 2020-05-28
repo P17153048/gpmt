@@ -20,7 +20,7 @@ function login($username, $password)
 function create($username, $email, $f_name, $l_name, $password, $permission)
 {
     $database = new DB();
-    $exists = $database->get_record ( "SELECT * FROM users WHERE email = '" . $email . "'" );
+    $exists = $database->get_record ( "SELECT * FROM users WHERE email = '" . $email . "' OR username = '" . $username . "'" );
 
     if ($exists != null) {
         return false;
